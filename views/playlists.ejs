@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Playlists</title>
+  <style>
+    .playlist {
+      border: 1px solid #ddd;
+      margin: 10px;
+      padding: 10px;
+      width: 300px;
+    }
+    .playlist-container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>User-Created Playlists</h1>
+  <div class="playlist-container">
+    <% playlists.forEach(playlist => { %>
+      <div class="playlist">
+        <h3><%= playlist.snippet.title %></h3>
+        <p><%= playlist.snippet.description %></p>
+        <a href="/fetch-playlist/<%= playlist.id %>">View Playlist Videos</a>
+      </div>
+    <% }) %>
+  </div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playlist Videos</title>
+  <style>
+    .video {
+      border: 1px solid #ddd;
+      margin: 10px;
+      padding: 10px;
+      width: 200px;
+    }
+    img {
+      width: 100%;
+    }
+    .video-container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    h3 {
+      font-size: 16px;
+      margin: 10px 0;
+    }
+    p {
+      font-size: 14px;
+      margin: 5px 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;  /* Limit to 2 lines */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
+</head>
+<body>
+  <h1>Playlist Videos</h1>
+  <div class="video-container">
+    <% videos.forEach(video => { %>
+      <div class="video">
+        <!-- Check if the video has a thumbnail -->
+        <% if (video.snippet.thumbnails && video.snippet.thumbnails.default) { %>
+          <img src="<%= video.snippet.thumbnails.default.url %>" alt="Video Thumbnail">
+        <% } else { %>
+          <img src="path/to/default-image.jpg" alt="No Thumbnail Available">
+        <% } %>
+
+        <h3><%= video.snippet.title %></h3>
+        <p><%= video.snippet.description %></p>  <!-- Truncated to 2 lines -->
+
+        <!-- Dynamically determine the correct video ID (resourceId or id) -->
+        <a href="https://www.youtube.com/watch?v=<%= video.snippet.resourceId?.videoId || video.id?.videoId %>" target="_blank">Watch on YouTube</a>
+      </div>
+    <% }) %>
+  </div>
+</body>
+</html>

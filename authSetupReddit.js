@@ -40,6 +40,9 @@ module.exports = function(app) {
 
       const accessToken = tokenData.access_token;
 
+      // Store tokens in the session
+      req.session.redditTokens = tokenData;
+
       // Fetch the Reddit username
       const username = await fetchRedditUsername(accessToken);
       console.log('Reddit Username:', username);
@@ -55,6 +58,14 @@ module.exports = function(app) {
       console.error('Error during Reddit OAuth process:', error);
       res.status(500).send('Error during Reddit OAuth process');
     }
+  });
+
+  // Middleware to check for stored tokens and use them if available
+  app.use((req, res, next) => {
+    if (req.session.redditTokens) {
+      req.redditAccessToken = req.session.redditTokens.access_token;
+    }
+    next();
   });
 
   // Helper function to fetch the Reddit username

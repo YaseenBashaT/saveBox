@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Videos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #ff0000;
+    }
+    h2 {
+      margin-top: 40px;
+      color: #ff0000;
+    }
+    .video-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .video {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      width: 300px;
+      padding: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+    .video:hover {
+      transform: scale(1.02);
+    }
+    .video img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .video h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #007bff;
+    }
+    .video p {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .video a {
+      display: inline-block;
+      padding: 10px 15px;
+      background-color: #ff0000;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    .video a:hover {
+      background-color: #cc0000;
+    }
+    .no-videos {
+      text-align: center;
+      font-size: 18px;
+      margin-top: 20px;
+      color: #777;
+    }
+    .search-bar {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .search-bar input[type="text"] {
+      padding: 10px;
+      width: 300px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>YouTube Videos</h1>
+
+  <!-- Search Form -->
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search videos by title or description...">
+  </div>
+
+  <section>
+    <h2>All Videos</h2>
+    <div class="video-container" id="videoContainer">
+      <% if (videos.length > 0) { %>
+        <% videos.forEach(video => { %>
+          <div class="video">
+            <% if (video.snippet.thumbnails && video.snippet.thumbnails.default) { %>
+              <img src="<%= video.snippet.thumbnails.default.url %>" alt="Video Thumbnail">
+            <% } else { %>
+              <img src="path/to/default-thumbnail.jpg" alt="No Thumbnail Available">
+            <% } %>
+            <h3><%= video.snippet.title %></h3>
+            <p><%= video.snippet.description ? video.snippet.description.substring(0, 100) : 'No description available' %>...</p>
+            <a href="https://www.youtube.com/watch?v=<%= video.snippet.resourceId.videoId %>" target="_blank">Watch on YouTube</a>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p class="no-videos">No videos available.</p>
+      <% } %>
+    </div>
+  </section>
+
+  <script>
+    // Live search functionality
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const query = this.value.toLowerCase();
+      filterVideos(query);
+    });
+
+    function filterVideos(query) {
+      const container = document.getElementById('videoContainer');
+      const videos = container.getElementsByClassName('video');
+
+      for (let i = 0; i < videos.length; i++) {
+        const title = videos[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+        const description = videos[i].getElementsByTagName('p')[0].innerText.toLowerCase();
+
+        // Check if query matches either title or description
+        if (title.includes(query) || description.includes(query)) {
+          videos[i].style.display = '';
+        } else {
+          videos[i].style.display = 'none';
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>

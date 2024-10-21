@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Connect to YouTube</title>
+  <title>Connect to Social Media</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -19,22 +19,45 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .button.linkedin {
+      background-color: #0077b5; /* LinkedIn Blue */
+    }
+
+    .button.reddit {
+      background-color: #FF4500; /* Reddit Orange */
     }
 
     .button:hover {
-      background-color: #cc0000;
+      opacity: 0.9;
     }
   </style>
 </head>
 <body>
-  <h1>Connect Your YouTube Account</h1>
-  <p>Click the button below to authenticate and access your YouTube videos.</p>
-  <button class="button" id="authButton">Connect to YouTube</button>
+  <h1>Connect Your Accounts</h1>
+
+  <!-- YouTube Button -->
+  <button class="button" id="authYouTubeButton">Connect to YouTube</button>
+
+  <!-- LinkedIn Button -->
+  <button class="button linkedin" id="authLinkedInButton">Connect to LinkedIn</button>
+
+  <!-- Reddit Button -->
+  <button class="button reddit" id="authRedditButton">Connect to Reddit</button>
 
   <script>
-    document.getElementById('authButton').addEventListener('click', function() {
-      // Redirect to the /auth route to start the OAuth process
-      window.location.href = '/auth';
+    document.getElementById('authYouTubeButton').addEventListener('click', function() {
+      window.location.href = '/auth';  // YouTube OAuth flow
+    });
+
+    document.getElementById('authLinkedInButton').addEventListener('click', function() {
+      window.location.href = '/auth/linkedin';  // LinkedIn OAuth flow
+    });
+
+    document.getElementById('authRedditButton').addEventListener('click', function() {
+      window.location.href = '/auth/reddit';  // Reddit OAuth flow
     });
   </script>
 </body>

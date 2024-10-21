@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reddit Saved and Upvoted Posts</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #ff4500;
+    }
+    h2 {
+      margin-top: 40px;
+      color: #ff4500;
+    }
+    .post-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .post {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      width: 300px;
+      padding: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+    .post:hover {
+      transform: scale(1.02);
+    }
+    .post img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .post h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #007bff;
+    }
+    .post p {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .post a {
+      display: inline-block;
+      padding: 10px 15px;
+      background-color: #ff4500;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    .post a:hover {
+      background-color: #e03a00;
+    }
+    .no-posts {
+      text-align: center;
+      font-size: 18px;
+      margin-top: 20px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Reddit Saved and Upvoted Posts</h1>
+
+  <section>
+    <h2>Saved Posts</h2>
+    <div class="post-container">
+      <% if (saved.length > 0) { %>
+        <% saved.forEach(post => { %>
+          <div class="post">
+            <% if (post.thumbnail && post.thumbnail !== 'self') { %>
+              <img src="<%= post.thumbnail %>" alt="Post Thumbnail">
+            <% } else { %>
+              <img src="path/to/default-thumbnail.jpg" alt="No Thumbnail Available">
+            <% } %>
+            <h3><%= post.title %></h3>
+            <p><%= post.selftext.substring(0, 100) %>...</p>
+            <a href="<%= post.url %>" target="_blank">Read More</a>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p class="no-posts">No saved posts available.</p>
+      <% } %>
+    </div>
+  </section>
+
+  <section>
+    <h2>Upvoted Posts</h2>
+    <div class="post-container">
+      <% if (upvoted.length > 0) { %>
+        <% upvoted.forEach(post => { %>
+          <div class="post">
+            <% if (post.thumbnail && post.thumbnail !== 'self') { %>
+              <img src="<%= post.thumbnail %>" alt="Post Thumbnail">
+            <% } else { %>
+              <img src="path/to/default-thumbnail.jpg" alt="No Thumbnail Available">
+            <% } %>
+            <h3><%= post.title %></h3>
+            <p><%= post.selftext.substring(0, 100) %>...</p>
+            <a href="<%= post.url %>" target="_blank">Read More</a>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p class="no-posts">No upvoted posts available.</p>
+      <% } %>
+    </div>
+  </section>
+
+</body>
+</html>

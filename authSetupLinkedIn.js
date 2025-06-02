@@ -14,6 +14,7 @@ module.exports = function(app) {
 
     // Callback Route to Handle LinkedIn's Response
     app.get('/linkedin/callback', async (req, res) => {
+        console.log('Query parameters:', req.query);
         const code = req.query.code;  // Get the authorization code from LinkedIn
         if (!code) {
             return res.status(400).send('No authorization code provided');

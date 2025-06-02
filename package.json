@@ -1,10 +1,16 @@
 {
   "dependencies": {
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.5.0",
     "ejs": "^3.1.10",
-    "express": "^4.21.1",
+    "express": "^4.21.2",
     "express-session": "^1.18.1",
     "google-auth-library": "^9.14.2",
-    "googleapis": "^144.0.0"
+    "googleapis": "^144.0.0",
+    "node-fetch": "^2.7.0",
+    "oauth": "^0.10.0",
+    "oauth-1.0a": "^2.2.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }

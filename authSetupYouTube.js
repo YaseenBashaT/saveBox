@@ -4,9 +4,16 @@ require('dotenv').config();  // Load environment variables
 module.exports = function(app) {
   const CLIENT_ID = process.env.YOUTUBE_CLIENT_ID;
   const CLIENT_SECRET = process.env.YOUTUBE_CLIENT_SECRET;
-  const REDIRECT_URI = process.env.YOUTUBE_REDIRECT_URI || 'http://localhost:3000/oauth2callback';
+  const REDIRECT_URI = process.env.YOUTUBE_REDIRECT_URI || 'http://localhost:3000/auth/youtube/callback';
+  if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI) {
+    throw new Error('YouTube OAuth credentials are not set in the environment variables.');
+  }
 
   const oauth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+
+  // You MUST add express-session middleware in your main app.js BEFORE these routes:
+  // const session = require('express-session');
+  // app.use(session({ secret: 'your-secret', resave: false, saveUninitialized: true }));
 
   // Serve the OAuth route to initiate YouTube authentication
   app.get('/auth', (req, res) => {
@@ -18,13 +25,19 @@ module.exports = function(app) {
   });
 
   // Handle the OAuth callback and fetch videos
-  app.get('/oauth2callback', async (req, res) => {
+  app.get('/auth/youtube/callback', async (req, res) => {
     const code = req.query.code;
     if (code) {
       try {
         const { tokens } = await oauth2Client.getToken(code);
         oauth2Client.setCredentials(tokens);
-        req.session.youtubeTokens = tokens;  // Store tokens in session
+
+        // Check if req.session exists before setting
+        if (req.session) {
+          req.session.youtubeTokens = tokens;  // Store tokens in session
+        } else {
+          console.warn('Warning: req.session is undefined. Did you forget to add express-session middleware?');
+        }
 
         const allVideos = await fetchAllVideos(oauth2Client);
         res.render('youtubeProfile', { videos: allVideos, searchQuery: '' });
@@ -95,7 +108,7 @@ module.exports = function(app) {
     const searchQuery = req.query.q || '';
     
     // Check if the session has valid tokens
-    if (req.session.youtubeTokens) {
+    if (req.session && req.session.youtubeTokens) {
       oauth2Client.setCredentials(req.session.youtubeTokens);
     } else {
       return res.redirect('/auth');  // If no tokens, redirect to auth flow

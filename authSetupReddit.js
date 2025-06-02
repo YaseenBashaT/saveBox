@@ -1,10 +1,19 @@
 const fetch = require('node-fetch');
+const session = require('express-session'); // Import session middleware
 require('dotenv').config();  // Load environment variables
 
 module.exports = function(app) {
   const CLIENT_ID = process.env.REDDIT_CLIENT_ID;
   const CLIENT_SECRET = process.env.REDDIT_CLIENT_SECRET;
   const REDIRECT_URI = process.env.REDDIT_REDIRECT_URI || 'http://localhost:3000/reddit/callback';
+
+  // Add session middleware to store Reddit tokens
+  app.use(session({
+    secret: 'your-secret-key',  // Replace with your own secret key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }  // 'false' for local dev, change to 'true' for production if using https
+  }));
 
   // Step 1: Redirect to Reddit's OAuth authorization URL
   app.get('/auth/reddit', (req, res) => {

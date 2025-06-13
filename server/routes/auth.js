@@ -1,13 +1,19 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/status', (req, res) => {
-  res.json({ authenticated: !!req.session.user });
-});
+// YouTube OAuth setup
+require('../auth/authSetupYouTube')(router);
 
-router.post('/logout', (req, res) => {
-  req.session.destroy();
-  res.json({ success: true });
-});
+// Reddit OAuth setup
+require('../auth/authSetupReddit')(router);
+
+// Twitter OAuth setup
+require('../auth/authSetupTwitter')(router);
+
+// LinkedIn OAuth setup
+require('../auth/authSetupLinkedIn')(router);
+
+// GitHub OAuth setup
+require('../auth/authSetupGitHub')(router);
 
 module.exports = router;

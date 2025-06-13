@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+}
+
+@layer components {
+  .platform-button {
+    @apply px-8 py-4 text-white font-semibold rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105 hover:shadow-xl;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-md p-6 transition-all duration-200 hover:shadow-lg;
+  }
+  
+  .search-input {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none;
+  }
+}

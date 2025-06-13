@@ -1,19 +1,19 @@
 const fetch = require('node-fetch');
 require('dotenv').config();
 
-module.exports = function(app) {
+module.exports = function(router) {
   const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
   const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
-  const REDIRECT_URI = process.env.GITHUB_REDIRECT_URI;
+  const REDIRECT_URI = process.env.GITHUB_REDIRECT_URI || 'http://localhost:3001/auth/github/callback';
 
   // Redirect user to GitHub for authentication
-  app.get('/auth/github', (req, res) => {
+  router.get('/github', (req, res) => {
     const authUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=read:user user:email repo`;
     res.redirect(authUrl);
   });
 
   // GitHub redirects back with code
-  app.get('/github/callback', async (req, res) => {
+  router.get('/github/callback', async (req, res) => {
     const code = req.query.code;
     if (!code) return res.status(400).send('No code received');
 
@@ -39,25 +39,27 @@ module.exports = function(app) {
       // Fetch GitHub profile
       const userRes = await fetch('https://api.github.com/user', {
         headers: {
-            Authorization: `Bearer ${accessToken}`,
-            Accept: 'application/vnd.github+json'
+          Authorization: `Bearer ${accessToken}`,
+          Accept: 'application/vnd.github+json'
         }
-        });
-        const userData = await userRes.json();
+      });
+      const userData = await userRes.json();
 
       // Fetch user's public repositories
-     const reposRes = await fetch('https://api.github.com/user/repos', {
+      const reposRes = await fetch('https://api.github.com/user/repos', {
         headers: {
-            Authorization: `Bearer ${accessToken}`,
-            Accept: 'application/vnd.github+json'
+          Authorization: `Bearer ${accessToken}`,
+          Accept: 'application/vnd.github+json'
         }
-        });
-        const reposData = await reposRes.json();
-
-      res.render('githubProfile', {
-        profile: userData,
-        repos: reposData
       });
+      const reposData = await reposRes.json();
+
+      // Store in session
+      req.session.githubProfile = userData;
+      req.session.githubRepos = reposData;
+
+      // Redirect to React app
+      res.redirect('http://localhost:5173/github');
 
     } catch (error) {
       console.error('GitHub OAuth Error:', error);
